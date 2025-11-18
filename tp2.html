@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modern Attendance System</title>
+
+  <!-- jQuery & Chart.js CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* ==== GLOBAL STYLES ==== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      padding-bottom: 50px;
+    }
+    h2 { text-align: center; margin: 30px 0; color: #444; }
+
+    /* ==== NAVBAR ==== */
+    .navbar {
+      background: linear-gradient(135deg, #6619b5, #3b82f6);
+      padding: 12px 20px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .navbar a:hover {
+      color: #ffe78f;
+      transform: translateY(-2px);
+    }
+
+    /* ==== TABLE ==== */
+    .table-container {
+      width: 90%;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      background: #3b82f6;
+      color: white;
+      padding: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    tr.student { transition: 0.3s; }
+    tr.student:hover {
+      transform: scale(1.01);
+      background: #f0f8ff;
+    }
+
+    /* ==== FORM ==== */
+    .form-container {
+      width: 350px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+    input:focus { border-color: #3b82f6; }
+    .btn {
+      background: linear-gradient(135deg, #3b82f6, #6619b5);
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .error { color: red; font-size: 13px; }
+    .success { color: green; text-align: center; font-weight: 600; }
+
+    /* ==== REPORT & BUTTONS ==== */
+    .buttons-section {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .action-btn {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      background: #3b82f6;
+      color: white;
+    }
+    .action-btn:hover { background: #2563eb; }
+
+    /* ==== MOBILE RESPONSIVE ==== */
+    @media(max-width: 720px) {
+      .navbar { flex-wrap: wrap; }
+      .form-container, .table-container { width: 95%; }
+      th, td { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<div class="navbar">
+  <a href="#table">Attendance</a>
+  <a href="#form">Add Student</a>
+  <a href="#report">Report</a>
+</div>
+
+<!-- ===== TABLE AREA ===== -->
+<h2 id="table">Attendance Table</h2>
+<div class="table-container">
+  <table id="attendanceTable">
+    <tr>
+      <th>Last Name</th> <th>First Name</th>
+      <th>S1</th><th>P1</th> <th>S2</th><th>P2</th> <th>S3</th><th>P3</th>
+      <th>S4</th><th>P4</th> <th>S5</th><th>P5</th> <th>S6</th><th>P6</th>
+      <th>Absences</th> <th>Participations</th> <th>Message</th>
+    </tr>
+
+    <tr class="student">
+      <td>Ahmed</td><td>Sara</td>
+      <td>✓</td><td>✓</td><td></td><td></td><td>✓</td><td></td>
+      <td></td><td></td><td></td><td>✓</td><td>✓</td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+
+    <tr class="student">
+      <td>Yacine</td><td>Ali</td>
+      <td>✓</td><td></td><td>✓</td><td>✓</td><td>✓</td><td></td>
+      <td>✓</td><td>✓</td><td></td><td></td><td>✓</td><td>✓</td>
+      <td></td><td></td><td></td>
+    </tr>
+
+    <tr class="student">
+      <td>Houcine</td><td>Rania</td>
+      <td>✓</td><td></td><td></td><td></td><td>✓</td><td>✓</td>
+      <td></td><td></td><td>✓</td><td>✓</td><td>✓</td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+  </table>
+</div>
+
+<script>
+function updateTable() {
+  document.querySelectorAll(".student").forEach(row => {
+    let abs = 0, par = 0;
+    let cells = row.querySelectorAll("td");
+
+    for (let i = 2; i < 14; i += 2) {
+      if (cells[i].innerText === "✓") abs++;
+      if (cells[i+1].innerText === "✓") par++;
+    }
+
+    cells[14].innerText = abs;
+    cells[15].innerText = par;
+
+    if (abs < 3) row.style.background = "#d4fcd6";
+    else if (abs <= 4) row.style.background = "#fff3b0";
+    else row.style.background = "#ffb3b3";
+
+    cells[16].innerText =
+      abs < 3 ? "Excellent!" :
+      abs <= 4 ? "Warning ⚠" :
+      "Excluded ❌";
+  });
+}
+updateTable();
+</script>
+
+<!-- ===== FORM ===== -->
+<h2 id="form">Add Student</h2>
+<div class="form-container">
+  <form id="studentForm">
+    <label>Last Name:</label>
+    <input type="text" id="lname">
+    <div id="errorL" class="error"></div>
+
+    <label>First Name:</label>
+    <input type="text" id="fname">
+    <div id="errorF" class="error"></div>
+
+    <button class="btn" type="submit">Add Student</button>
+  </form>
+  <p id="msg" class="success"></p>
+</div>
+
+<script>
+document.getElementById("studentForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let lname = document.getElementById("lname").value;
+  let fname = document.getElementById("fname").value;
+  let ok = true;
+
+  document.querySelectorAll(".error").forEach(e => e.innerText = "");
+
+  if (!/^[a-zA-Z]+$/.test(lname)) { document.getElementById("errorL").innerText = "Only letters allowed"; ok = false; }
+  if (!/^[a-zA-Z]+$/.test(fname)) { document.getElementById("errorF").innerText = "Only letters allowed"; ok = false; }
+  if (!ok) return;
+
+  let row = document.querySelector("#attendanceTable").insertRow(-1);
+  row.classList.add("student");
+  row.innerHTML = `<td>${lname}</td><td>${fname}</td>` + `<td></td><td></td>`.repeat(6) + `<td>0</td><td>0</td><td></td>`;
+  document.getElementById("msg").innerText = "Student added successfully!";
+  updateTable();
+});
+</script>
+
+<!-- ===== EX4 & EX5 & EX6 ===== -->
+<div class="buttons-section">
+  <h2 id="report">Report</h2>
+  <button class="action-btn" onclick="showReport()">Show Report</button>
+  <button class="action-btn" id="highlightBest">Highlight Excellent</button>
+  <button class="action-btn" id="reset">Reset Colors</button>
+</div>
+
+<canvas id="reportChart" width="350" height="150"></canvas>
+
+<script>
+function showReport() {
+  let rows = document.querySelectorAll(".student");
+  let total = rows.length, present = 0, par = 0;
+  
+  rows.forEach(r => {
+    if (r.cells[14].innerText !== "") present++;
+    if (r.cells[15].innerText !== "") par++;
+  });
+
+  new Chart(document.getElementById("reportChart"), {
+    type: "bar",
+    data: { labels: ["Total", "Present", "Participated"],
+      datasets: [{ data: [total, present, par] }] }
+  });
+}
+
+$(".student").hover(
+  function() { $(this).css("box-shadow", "0 0 10px #aaa"); },
+  function() { $(this).css("box-shadow", "none"); }
+);
+
+$(".student").click(function() {
+  let name = $(this).children().eq(0).text() + " " + $(this).children().eq(1).text();
+  let abs = $(this).children().eq(14).text();
+  alert(`${name} has ${abs} absences.`);
+});
+
+$("#highlightBest").click(function() {
+  $(".student").each(function() {
+    if (parseInt($(this).children().eq(14).text()) < 3) {
+      $(this).css("border", "3px solid green").fadeOut(300).fadeIn(300);
+    }
+  });
+});
+
+$("#reset").click(function() {
+  $(".student").css({ border: "1px solid #ccc", background: "" });
+});
+</script>
+
+</body>
+</html>
