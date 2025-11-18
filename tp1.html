@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attendance System</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; }
+
+    /* Navbar */
+    .navbar {
+      background-color: #333;
+      overflow: hidden;
+    }
+    .navbar a {
+      float: left;
+      color: white;
+      text-align: center;
+      padding: 14px 20px;
+      text-decoration: none;
+    }
+    .navbar a:hover {
+      background-color: #575757;
+    }
+
+    /* Table */
+    table { width: 80%; border-collapse: collapse; margin: 20px auto; }
+    th, td { border: 1px solid black; padding: 8px; text-align: center; }
+    th { background-color: #f2f2f2; }
+
+    /* Form */
+    form { width: 300px; margin: 30px auto; }
+    label, input { display: block; margin-bottom: 10px; }
+    button { padding: 5px 10px; }
+  </style>
+</head>
+
+<body>
+
+  <!-- Exercise 3: Navbar -->
+  <div class="navbar">
+    <a href="#home">Home</a>
+    <a href="#attendance">Attendance List</a>
+    <a href="#addstudent">Add Student</a>
+    <a href="#">Reports</a>
+    <a href="#">Logout</a>
+  </div>
+
+  <!-- Home Section -->
+  <h2 id="home" style="text-align:center; padding: 20px;">Welcome to the Attendance System</h2>
+
+  <!-- Exercise 1: Attendance Table -->
+  <h3 id="attendance" style="text-align:center;">Student Attendance Table</h3>
+  <table>
+    <tr>
+      <th>Student ID</th>
+      <th>Last Name</th>
+      <th>First Name</th>
+      <th>Course</th>
+      <th>Session Date</th>
+      <th>Present</th>
+      <th>Participated</th>
+    </tr>
+    <tr>
+      <td>001</td>
+      <td>Ahmed</td>
+      <td>Sarah</td>
+      <td>AWP</td>
+      <td>2025-11-18</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>002</td>
+      <td>Benali</td>
+      <td>Amine</td>
+      <td>AWP</td>
+      <td>2025-11-18</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+  </table>
+
+  <!-- Exercise 2: Add Student Form -->
+  <h3 id="addstudent" style="text-align:center;">Add New Student</h3>
+  <form action="#" method="post">
+    <label for="sid">Student ID:</label>
+    <input type="text" id="sid" name="sid" required>
+
+    <label for="lname">Last Name:</label>
+    <input type="text" id="lname" name="lname" required>
+
+    <label for="fname">First Name:</label>
+    <input type="text" id="fname" name="fname" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <button type="submit">Submit</button>
+  </form>
+
+</body>
+</html>
+
