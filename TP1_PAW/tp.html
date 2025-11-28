@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Attendance System</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light: #f4f6f9;
+      --font: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background-color: var(--light);
+      scroll-behavior: smooth;
+    }
+
+    nav {
+      background-color: var(--primary);
+      display: flex;
+      flex-wrap: wrap;
+      padding: 10px;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 10px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    h2, h3 {
+      text-align: center;
+      color: var(--primary);
+      margin-top: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    form {
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #34495e;
+    }
+
+    .reports {
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    @media (min-width: 768px) {
+      nav {
+        justify-content: flex-start;
+      }
+
+      .container {
+        padding: 40px;
+      }
+
+      form, table {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔹 EXO 3: Navigation Bar -->
+  <nav>
+    <a href="#attendance">Attendance List</a>
+    <a href="#add-student">Add Student</a>
+    <a href="#reports">Reports</a>
+  </nav>
+
+  <div class="container">
+
+    <!-- 🔹 EXO 1: Attendance Table -->
+    <h2 id="attendance">Student Attendance</h2>
+    <table id="attendance-table">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th>Course</th>
+          <th>Present</th>
+          <th>Participated</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>001</td><td>Boutaba</td><td>Serine nour el houda</td><td>Web Programming</td>
+          <td><input type="checkbox" /></td>
+          <td><input type="checkbox" /></td>
+        </tr>
+        <tr>
+          <td>002</td><td>Cherat</td><td>Nour</td><td>Web Programming</td>
+          <td><input type="checkbox" /></td>
+          <td><input type="checkbox" /></td>
+        </tr>
+        <tr>
+          <td>003</td><td>Boutaba</td><td>Farah</td><td>Web Programming</td>
+          <td><input type="checkbox" /></td>
+          <td><input type="checkbox" /></td>
+        </tr>
+        <tr>
+          <td>004</td><td>Boutaba</td><td>Youcef</td><td>Web Programming</td>
+          <td><input type="checkbox" /></td>
+          <td><input type="checkbox" /></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 🔹 EXO 2: Add Student Form -->
+    <h3 id="add-student">Add New Student</h3>
+    <form id="student-form">
+      <label for="student_id">Student ID</label>
+      <input type="text" id="student_id" name="student_id" required />
+
+      <label for="last_name">Last Name</label>
+      <input type="text" id="last_name" name="last_name" required />
+
+      <label for="first_name">First Name</label>
+      <input type="text" id="first_name" name="first_name" required />
+
+      <label for="course">Course</label>
+      <input type="text" id="course" name="course" value="Web Programming" required />
+
+      <button type="submit">Add Student</button>
+    </form>
+
+    <!-- 🔹 EXO 5: Reports Section -->
+    <h3 id="reports">Reports</h3>
+    <div class="reports">
+      <p><strong>Total Students:</strong> <span id="total-students">4</span></p>
+      <p><strong>Attendance Rate:</strong> Manual (based on checkboxes)</p>
+      <p><strong>Course:</strong> Web Programming</p>
+    </div>
+
+  </div>
+
+  <!-- 🔹 EXO 4: Mobile First + Dynamic JS -->
+  <script>
+    const form = document.getElementById('student-form');
+    const table = document.getElementById('attendance-table').getElementsByTagName('tbody')[0];
+    const totalStudents = document.getElementById('total-students');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('student_id').value;
+      const last = document.getElementById('last_name').value;
+      const first = document.getElementById('first_name').value;
+      const course = document.getElementById('course').value;
+
+      const row = table.insertRow();
+      row.innerHTML = `
+        <td>${id}</td>
+        <td>${last}</td>
+        <td>${first}</td>
+        <td>${course}</td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      `;
+
+      totalStudents.textContent = table.rows.length;
+
+      form.reset();
+    });
+  </script>
+
+</body>
+</html>
